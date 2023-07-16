@@ -3,7 +3,7 @@
     ShowEmployeeData();
 });
 
-function ShowEmployeeData() {
+function ShowEmployeeData(){
     debugger
     var URLl = $("#IdHidden").val();
     $.ajax({
@@ -20,7 +20,7 @@ function ShowEmployeeData() {
                 obj += '<td>' + item.city + '</td>';
                 obj += '<td>' + item.state + '</td>';
                 obj += '<td>' + item.salary + '</td>';
-                obj += '<td><a href="#" class="btn btn-primary">Edit</a>  <a href="#" class="btn btn-danger">Delete</a></td>';
+                obj += '<td><a href="#" class="btn btn-primary" onclick="Edit('+item.id+')">Edit</a>||  <a href="#" onclick="Delete('+item.id+')" class="btn btn-danger">Delete</a></td>';
                 obj += '</tr>';
             });
             $("#table_Data").html(obj);
@@ -28,7 +28,6 @@ function ShowEmployeeData() {
         error: function () {
             alert("data can not be fetch");
         }
-
     });
 };
 $("#btnAddEmployee").click(function () {
@@ -37,10 +36,11 @@ $("#btnAddEmployee").click(function () {
 
 function AddEmployee() {
     var objData = {
-        Name: $("#Name").val(),
-        State: $("#State").val(),
-        City: $("#City").val(),
-        Salary: $("#Salary").val()
+        
+        stateof: $("#State").val(),
+        nameof: $("#Name").val(),
+        cityof: $("#City").val(),
+        salaryof: $("#Salary").val()
     }
     $.ajax({
         url: '/Ajax/AddEmployee',
@@ -57,15 +57,78 @@ function AddEmployee() {
         error: function () {
             alert("data can not save");
         }
-
     });
-    function HideModalPopUp() {
-        $("#employeeModal").modal('hide');
+}
+function Delete(id) {
+    if (confirm("Are you sure ?")) {
+        $.ajax({
+            url: '/Ajax/Delete?id=' + id,
+            success: function () {
+                alert("Record deleted");
+                ShowEmployeeData();
+            },
+            error: function () {
+                alert("Data can not be deleted");
+            }
+        });
     }
-    function ClearTextBox() {
-        $("#Name").val(''),
+    
+}
+
+function HideModalPopUp() {
+    $("#employeeModal").modal('hide');
+}
+function ClearTextBox() {
+    $("#Name").val(''),
         $("#State").val(''),
         $("#City").val(''),
         $("#Salary").val('')
+}
+function Edit(id){
+    $.ajax({
+        url: '/Ajax/Edit?id=' + id,
+        type: 'Get',
+        contentType: 'application/json;charSet=utf-8;',
+        dataType: 'json',
+        success: function (response) {
+            $("#employeeModal").modal("show");
+            $("#Id").val(response.id);
+            $("#Name").val(response.name);
+            $("#State").val(response.state);
+            $("#City").val(response.city);
+            $("#Salary").val(response.salary);
+
+            $("#AddEmployee").hide();
+            $("#btnUpdate").show();
+        },
+        error: function () {
+            alert("Data dont found");
+        }
+    });
+}
+
+function UpdateEmployee() {
+    var objData = {
+        Id:$("#Id").val(),
+        Name: $("#Name").val(),
+        State: $("#State").val(),
+        City: $("#City").val(),
+        Salary: $("#Salary").val()
     }
+    $.ajax({
+        url: '/Ajax/Edit',
+        type: 'Post',
+        data: objData,
+        contentType: 'application/x-www-form-urlencoded;charSet=utf-8;',
+        dataType: 'json',
+        success: function () {
+            alert("data saved");
+            ClearTextBox();
+            ShowEmployeeData();
+            HideModalPopUp();
+        },
+        error: function () {
+            alert("data can not save");
+        }
+    });
 }

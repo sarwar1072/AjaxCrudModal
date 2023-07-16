@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
 <button class="btn btn-sm btn-primary m-2 " id="btnAddEmployee">Add Employee</button>
@@ -29,6 +28,10 @@
             <div class="modal-body">
                 <form method="post">
                     <div class="form-group">
+                        <label>Id</label>
+                        <input type="text" placeholder="Enter Id" class="form-control" id="Id" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
                         <label>Name</label>
                         <input type="text" placeholder="Enter Name" class="form-control" id="Name" />
                     </div>
@@ -48,7 +51,8 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary"onclick="AddEmployee()"  id="AddEmployee">Save</button>
-                <button class="btn btn-danger btn-default">Close</button>
+                <button class="btn btn-warning" onclick="UpdateEmployee()" style="display:none" id="btnUpdate">Update</button>
+                <button class="btn btn-danger btn-default" data-dismiss="modal">Close</button>
             </div>
 
         </div>
